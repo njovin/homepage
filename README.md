@@ -1,3 +1,3 @@
 # homepage
 You got to my github.
-Download homepage-master.zip and open index.html to view the code in action!
+Download homepage-master.zip and open an *.html file to view the code of that file go into action!
