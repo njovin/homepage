@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>
+		Homework: 8/27/15-8/29/15
+		</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+		</script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
+		</script>
+	</head>
+	<body>
+		<nav class="navbar navbar-default">
+  			<div class="container-fluid">
+    			<div class="navbar-header">
+      				<a class="navbar-brand" href="8-27-15 to 8-29-15.html">
+        				<button type="button" id="myButton" data-loading-text="Please wait..." class="btn btn-primary" autocomplete="off" >
+							Home
+						</button>
+						<script>
+							  $('#myButton').on('click', function () {
+							    var $btn = $(this).button('loading')
+							    $btn.button('reset')
+							  })
+						</script>
+      				</a>
+      				About Me
+    			</div>
+  			</div>
+		</nav>
+			<div class="container">
+				<div class="alert alert-success alert-dismissible" role="alert">
+		  			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		  				<span aria-hidden="true">
+		  					&times;
+		  				</span>
+		  			</button>
+		  			<strong>
+		  				Welcome!
+		  			</strong>
+		  			 You made it to homework page 1!!!
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+		    			<h3 class="panel-title">
+		    				Introductions
+		    			</h3>
+		  			</div>
+				  <div class="panel-body">
+				    <div class="row">
+					  <div class="col-xs-6">
+					    <h1>
+					  		Welcome!
+					  	</h1>
+					  	I hope you enjoy my 1st website!!!!!!!!!!
+					  </div>
+					  <div class="col-xs-6">
+					  	<img src="seth.jpg" width="250">
+					  </div>
+					</div>
+				  </div>
+				</div>
+				<div class="row">
+					<div class="col-xs-4">
+					  	<div class="panel panel-default">
+				          	<div class="panel-heading">
+		    					<h3 class="panel-title">
+		    						Game
+		    					</h3>
+		  					</div>
+		  					<div class="panel-body">
+		                        Guess a number between 1 and 10!!!
+		                        <br>
+		                        <form class="navbar-form navbar-left" role="search">
+								  	<div class="form-group">
+								    	<input type="text" class="form-control" placeholder="Guess here" id="textbox1">
+								  	</div>
+								</form>
+								<script type="text/javascript">
+									function guess()
+									{
+										a = Math.floor((Math.random() * 10) + 1);
+										b = document.getElementById("textbox1").value;
+										
+										if (a == b) 
+										{
+											document.write('You got it!!! Reload to restart.');
+										} else {
+											document.write('You did not get it, it was '+a+' you guessed '+b+'. Reload to restart.');
+										};
+									}
+									</script>
+								<button type="Submit" onclick="guess()" data-loading-text="Please wait...">
+									Guess!!!
+								</button>
+		  					</div>
+				        </div>
+					</div>
+				<div class="col-xs-4">
+				    <div class="panel panel-default">
+			          	<div class="panel-heading">
+	    					<h3 class="panel-title">
+	    						Quotes
+	    					</h3>
+	  					</div>
+	  					<div class="panel-body">
+	  						<form class="navbar-form navbar-left" role="search">
+								<div class="form-group">
+								   	<input type="text" class="form-control" placeholder="Type quote here" id="textbox2">
+								</div>
+							</form>
+							<script type="text/javascript">
+	  						var c = [];
+	  						function addQuote()
+	  						{
+	  							d = document.getElementById("textbox2").value;
+	  							c.push(d);
+	  						};
+	  						function removeQuote()
+	  						{
+	  							c.pop();
+	  						};
+	  						var e = c.length + 1
+	  						function draw()
+	  						{
+	  							document.getElementById("li1").innerHTML = c[0];
+	  							document.getElementById("li2").innerHTML = c[1];
+	  							document.getElementById("li3").innerHTML = c[2];
+	  							document.getElementById("li4").innerHTML = c[3];
+	  							document.getElementById("li5").innerHTML = c[4];
+	  							document.getElementById("button1").innerHTML = "Report quote #" + e;
+	  						}
+	  						</script>
+	                    	<button type="button" onclick="addQuote()" data-loading-text="Please wait...">
+								Add above quote
+							</button>
+							<button type="button" onclick="removeQuote()" data-loading-text="Please wait..." id="button1">
+							</button>
+							<div>
+								<ol>
+									<li id="li1">
+									</li>
+									<li id="li2">
+									</li>
+									<li id="li3">
+									</li>
+									<li id="li4">
+									</li>
+									<li id="li5">
+									</li>
+								</ol>
+								<h6>
+									max quotes 5
+								</h6>
+							</div>
+			        </div>
+				</div>
+				<div class="col-xs-4">
+				  	<div class="panel panel-default">
+			          	<div class="panel-heading">
+	    					<h3 class="panel-title">
+	    						News
+	    					</h3>
+	  					</div>
+	  					<div class="panel-body">
+	                        Currently unavalible until further notice. 
+	                        <a href="https://news.google.com">
+	                        	Avalible here.
+	                        </a>
+	  					</div>
+			        </div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

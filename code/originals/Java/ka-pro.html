@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ka. program</title>
+</head>
+<body>
+<script width="700" height="700">
+//Set up the mouse positions
+var mouse_X;
+var mouse_Y;
+// Your stats
+var stats = {
+    points: 0,
+};
+// The radar info
+var radarInfo = {
+    angle: 0;
+};
+// Your ship info
+var shipInfo = {
+    x: 0;
+    y: 0;
+    ySpeed: 0;
+    angle: 0;
+    newAngle: 0;
+    light: false;
+    newLight: [true, false];
+    c: color(0, 255, 255);
+};
+// Star info
+var starInfo = {
+    starNumber: 0;
+    starLimit: 50;
+    Size: [];
+    x: [];
+    y: [];
+};
+// Planet info
+var planets = [
+    {
+        name: "Hitchhiker's Haven";
+        x: -500;
+        y: 800;
+        s: 200;
+        c: color(80, 0, 92);
+    }
+];
+// Message 
+var message = "Welcome, Explorer! This is your personal talking computer! I'm here to help you while you complete missiona. Click the ? to have more instructions!";
+// The page
+var page = "Loading";
+// The screen
+var screen = "None";
+// Is a button being pressed?
+var buttonPressed = false;
+// Keys
+var keys = [];
+// Key movement
+var keyPressed = function() {
+   keys[keyCode] = true;
+};
+var keyReleased = function() {
+    keys[keyCode] = false;
+};
+//If the mouse is released
+var mouseReleased = function() {
+    buttonPressed = true;
+};
+// The ship movement
+var movement = function() {
+    var angleSpeed = abs(shipInfo.angle) / 30 + 1;
+    var moveSpeed = shipInfo.angle / 4.5;
+    if (keys[LEFT] === true) {
+        shipInfo.newAngle = -45;   
+    }
+    else if (keys[RIGHT] === true) {
+        shipInfo.newAngle = 45;
+    }
+    else {
+        shipInfo.newAngle = 0;
+        if (round(shipInfo.angle) === 0) {
+            shipInfo.angle = 0;
+        }
+    }
+    if (shipInfo.angle > shipInfo.newAngle) {
+        shipInfo.angle-=angleSpeed;
+    }
+    if (shipInfo.angle < shipInfo.newAngle) {
+        shipInfo.angle+=angleSpeed;
+    }
+    shipInfo.x+=moveSpeed;
+    if (keys[32] === true) {
+        if (shipInfo.light === false) {
+            shipInfo.light = true;
+            keys[32] = false;
+        }
+        else if (keys[32] === true) {
+            shipInfo.light = false;
+            keys[32] = false;
+        }
+    }
+    if (keys[UP] === true) {
+        shipInfo.ySpeed-=0.1;
+    }
+    else if (keys[DOWN] === true) {
+        shipInfo.ySpeed+=0.1;
+    }
+    else {
+        if (shipInfo.ySpeed > 0) {
+            shipInfo.ySpeed-=0.1;
+        }
+        else if (shipInfo.ySpeed < 0) {
+            shipInfo.ySpeed+=0.1;
+        }
+    }
+    if (shipInfo.ySpeed > 10) {
+        shipInfo.ySpeed = 10;
+    }
+    else if (shipInfo.ySpeed < -10) {
+        shipInfo.ySpeed = -10;
+    }
+    shipInfo.y+=shipInfo.ySpeed;
+};
+// Circle buttons
+var circleButton = function(x, y, w, h, t, newScreen) {
+    var over = false;
+    fill(255, 255, 255);
+    if (dist(mouse_X, mouse_Y, x, y) < w / 2 && screen === "None" || dist(mouse_X, mouse_Y, x, y) < w / 2 && newScreen === "None") {
+        fill(255, 255, 255, 200);
+        if (mouseIsPressed) {
+            over = true;
+        }
+        if (buttonPressed === true && over === true) {
+            screen = newScreen;
+            buttonPressed = false;
+            over = false;
+        }
+    }
+    ellipse(x, y, w, h);
+    fill(0, 0, 0);
+    textAlign(CENTER, CENTER);
+    textFont(createFont("monospace"), h);
+    text(t, x, y);
+};
+// The explorer icom
+var eIcon = function(x, y, w, h) {
+    fill(250, 250, 250);
+    ellipse(x, y, w, h);
+    noFill();
+    strokeCap(SQUARE);
+    strokeWeight(w / 10);
+    stroke(0, 100, 200);
+    arc(x, y, w * 0.6, h * 0.6, 30, 340);
+    translate(x, y);
+    rotate(330);
+    line(- (w * 0.3), 0, w * 0.3, 0);
+    rotate(-330);
+    translate(-x, -y);
+    noStroke();
+};
+// Radar
+var radar = function(x, y, w, h) {
+    if (screen === "None") {
+        radarInfo.angle++;
+    }
+    noFill();
+    stroke(0, 255, 0);
+    ellipse(x, y, w, h);
+    ellipse(x, y, w * 0.65, h * 0.65);
+    ellipse(x, y, w * 0.3, h * 0.3);
+    translate(x, y);
+    for (var a = radarInfo.angle - 20; a < radarInfo.angle; a++) {
+        rotate(a);
+        stroke(0, 255, 0, 255 - (radarInfo.angle - a) * 12.5);
+        line(0, 0, w / 2, 0);
+        rotate(-a);
+    }
+    translate(-x, -y);
+    noStroke();
+};
+// Your ship
+var spaceship = function(x, y, w, h, c) {
+    if (screen === "None") {
+        movement();
+    }
+    var ship = function(x, y, w, h, c) {
+        noStroke();
+        fill(red(c) - 15, green(c) - 15, blue(c) - 15);
+        bezier(x, y, x + w * 0.3, y - h * 0.2, x + w * 0.7, y - h * 0.2, x + w, y);
+        fill(red(c) - 45, green(c) - 45, blue(c) - 45);
+        bezier(x, y, x + w * 0.35, y + h * 0.2, x + w * 0.65, y + h * 0.2, x + w, y);
+        fill(220, 220, 220);
+        arc(x + w * 0.5, y - h * 0.125, w / 2, h / 2, 180, 360);
+        fill(190, 190, 190);
+        arc(x + w * 0.4, y - h * 0.125, w * 0.7, h * 0.525, 300, 360);
+        fill(0, 0, 0);
+        rect(x + w * 0.4, y + h * 0.14, w * 0.2, h * 0.025);
+        if (shipInfo.light === true) {
+            fill(255, 255, 255, 200);
+            quad(x + w * 0.425, y + h * 0.165, x + w * 0.575, y + h * 0.165, x + w * 0.7, y + h * 0.55, x + w * 0.3, y + h * 0.55);
+        }
+        stroke(255, 255, 255);
+        line(x + w * 0.75, y - h * 0.125, x + w * 0.825, y - h * 0.375);
+        noFill();
+        ellipse(x + w * 0.85, y - h * 0.4, w * 0.05, h * 0.05);
+        stroke(0, 0, 0);
+        ellipse(x + w * 0.25, y, w * 0.075, h * 0.075);
+        ellipse(x + w * 0.75, y, w * 0.075, h * 0.075);
+        ellipse(x + w * 0.416, y, w * 0.075, h * 0.075);
+        ellipse(x + w * 0.583, y, w * 0.075, h * 0.075);
+    };
+    translate(x, y);
+    rotate(shipInfo.angle);
+    ship(-(w / 2), 0, w, h, c);
+    rotate(-shipInfo.angle);
+    translate(-x, -y);
+};
+// The information / power panel
+var dashboard = function() {
+    fill(0, 0, 0);
+    quad(0, 400, 0, 375, 50, 325, 50, 400);
+    rect(50, 325, 350, 75);
+    noFill();
+    strokeWeight(3);
+    stroke(255, 255, 255);
+    line(0, 375, 50, 325);
+    line(50, 325, 400, 325);
+    quad(25, 350, 50, 325, 175, 325, 150, 350);
+    eIcon(60, 337.5, 15, 15);
+    radar(50, 375, 40, 40);
+    textFont(createFont("monospace"), 13);
+    textAlign(LEFT, CENTER);
+    fill(0, 100, 200);
+    text(stats.points + " points", 75, 337.5);
+    textAlign(LEFT, TOP);
+    fill(0, 255, 0);
+    text("Radar", 75, 352.5);
+    textSize(8);
+    text("No objects detected.", 75, 365, 75, 400);
+    textSize(10);
+    fill(255, 255, 255);
+    text(message, 175, 330, 220, 400);
+    circleButton(150, 375, 40, 40, "?", "Help");
+};
+// Creates the stars
+var createStars = function() {
+    if (starInfo.starNumber < starInfo.starLimit) {
+        starInfo.Size[starInfo.starNumber] = round(random(3, 10));
+        starInfo.x[starInfo.starNumber] = round(random(0, 400));
+        starInfo.y[starInfo.starNumber] = round(random(0, 400));
+        starInfo.starNumber++;
+    }    
+};
+// Star background
+var stars = function() {
+    for (var a = 0; a < starInfo.starNumber; a++) {
+        fill(255, 255, 255);
+        ellipse(starInfo.x[a] - shipInfo.x, starInfo.y[a] - shipInfo.y, starInfo.Size[a] / 3 * 2, starInfo.Size[a] / 3 * 2); 
+        for (var s = starInfo.Size[a] / 3 * 2; s < starInfo.Size[a]; s++) {
+            noFill();
+            stroke(255, 255, 255, 255 - ((s / starInfo.Size[a]) * 255));
+            ellipse(starInfo.x[a] - shipInfo.x, starInfo.y[a] - shipInfo.y, s, s);
+        }
+        if (starInfo.x[a] - shipInfo.x < 0) {
+            starInfo.x[a] += 400;
+        }
+        if (starInfo.x[a] - shipInfo.x > 400) {
+            starInfo.x[a] -= 400;
+        }
+        if (starInfo.y[a] - shipInfo.y < 0) {
+            starInfo.y[a] += 400;
+        }
+        if (starInfo.y[a] - shipInfo.y > 400) {
+            starInfo.y[a] -= 400;
+        }
+    }
+};
+// Planet drawing
+var planet = function() {
+    for (var a = 0; a < planets.length; a++) {
+        fill(red(planets[a].c), green(planets[a].c), blue(planets[a].c));
+        if (dist(planets[a].x - shipInfo.x, planets[a].y - shipInfo.y, 200, 200) < planets[a].s / 2 + 40) {
+            fill(red(planets[a].c), green(planets[a].c), blue(planets[a].c), 100);   
+        }
+        ellipse(planets[a].x - shipInfo.x, planets[a].y - shipInfo.y, planets[a].s, planets[a].s);
+        fill(255, 255, 255);
+        textAlign(CENTER, CENTER);
+        textSize(10);
+        text(planets[a].name, planets[a].x - shipInfo.x - planets[a].s / 2, planets[a].y - shipInfo.y - planets[a].s / 2, planets[a].s, planets[a].s);
+    }
+};
+// The screen
+var newScreen = function() {
+    if (screen !== "None") {
+        noStroke();
+        fill(255, 255, 255, 100);
+        rect(0, 0, 400, 400);
+        fill(0, 0, 0, 155);
+        rect(100, 50, 200, 250, 6);
+        circleButton(280, 70, 30, 30, "X", "None");
+        if (screen === "Help") {
+            fill(255, 255, 255);
+            textAlign(CENTER, CENTER);
+            textSize(30);
+            text("HELP", 200, 70);
+        }
+    }
+};
+// Start screen background
+var Background = function() {
+    background(200, 200, 200);
+    for (var s = 400; s < 600; s++) {
+        noFill();
+        strokeWeight(1);
+        stroke(255, 255, 255, (s - 400) / 4);
+        ellipse(200, 200, s, s);
+        noStroke();
+    }
+};
+//Thanks, Piyush!
+var setMouseXY = function() {
+    mouse_X = mouseX * 400 / width;
+    mouse_Y = mouseY * 400 / height;
+};
+// Draw function
+var draw = function() {
+    // Scale the mouse positions
+    setMouseXY();
+    // Game page
+    if (page === "Game") {
+        background(0, 0, 0);
+        stars();
+        planet();
+        dashboard();
+        spaceship(200, 200, 100, 100, shipInfo.c);
+        newScreen();
+    }
+    // Loading page
+    if (page === "Loading") {
+        background(0, 0, 0);
+        noFill();
+        strokeWeight(10);
+        strokeCap(SQUARE);
+        stroke(200, 200, 200);
+        arc(200, 200, 150, 150, 0, 360);
+        stroke(255, 255, 255);
+        arc(200, 200, 150, 150, 0, starInfo.starNumber / starInfo.starLimit * 360);
+        textAlign(CENTER, CENTER);
+        textFont(createFont("monospace"), 20);
+        text(round(starInfo.starNumber / starInfo.starLimit * 100) + "%", 200, 200);
+        createStars();
+        if (starInfo.starNumber / starInfo.starLimit >= 1) {
+            page = "Game";
+        }
+    }
+};
+</script>
+</body>
+</html>
